@@ -11,7 +11,7 @@ def rescaleFrame(frame, scale=0.75):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA)
 
 # reading image
-img = cv2.imread('Images/AnAlYzE THiS!.jpg')
+img = cv2.imread('../Images/cranberry_images/A4S329.jpg')
 img = rescaleFrame(img, scale=0.5)
 img = cv2.GaussianBlur(img, (7,7), cv2.BORDER_DEFAULT)
 

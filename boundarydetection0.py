@@ -11,9 +11,9 @@ def rescaleFrame(frame, scale=0.75):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA)
 
 # reading image
-img = cv2.imread('Images/AnAlYzE THiS!.jpg')
+img = cv2.imread('Images/BerriesOriginal.png')
 img = rescaleFrame(img, scale=0.5)
-img = cv2.GaussianBlur(img, (7,7), cv2.BORDER_DEFAULT)
+img = cv2.GaussianBlur(img, (5,5), cv2.BORDER_DEFAULT)
 
 # converting image into grayscale image
 im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -29,7 +29,7 @@ im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 # cv2.destroyAllWindows()
 
 # setting threshold of gray image
-thresh_val = 95
+thresh_val = 100
 _, threshold = cv2.threshold(im_gray, thresh_val, 255, cv2.THRESH_BINARY)
 
 # using a findContours() function
@@ -85,17 +85,17 @@ for contour in contours:
         x = int(M['m10']/M['m00'])
         y = int(M['m01']/M['m00'])
 
-    if i in cranberries:
-        totalCranberryArea = totalCranberryArea + area/averageBorderCircleArea
-        cv2.putText(img, str(round(area/averageBorderCircleArea, 3)), (x, y),
-                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+    # if i in cranberries:
+        # totalCranberryArea = totalCranberryArea + area/averageBorderCircleArea
+        # cv2.putText(img, str(round(area/averageBorderCircleArea, 3)), (x, y),
+        #                  cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
     i = i + 1
 
-cv2.putText(img, 'cran count: ' + str(len(cranberries)), (10, 30),
-                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
-cv2.putText(img, 'avg size: ' + str(round(totalCranberryArea/len(cranberries), 3)), (10, 60),
-                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+# cv2.putText(img, 'cran count: ' + str(len(cranberries)), (10, 30),
+#                  cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+#
+# cv2.putText(img, 'avg size: ' + str(round(totalCranberryArea/len(cranberries), 3)), (10, 60),
+#                  cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
 # displaying the image after drawing contours
 cv2.imshow('Cranberries', img)

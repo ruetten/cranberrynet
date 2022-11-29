@@ -13,7 +13,7 @@ def rescaleFrame(frame, scale=0.75):
 # reading image
 img = cv2.imread('Images/BerriesOriginal.png')
 img = rescaleFrame(img, scale=0.5)
-img = cv2.GaussianBlur(img, (7,7), cv2.BORDER_DEFAULT)
+img = cv2.GaussianBlur(img, (10,10), cv2.BORDER_DEFAULT)
 
 # converting image into grayscale image
 im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
