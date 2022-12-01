@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
+from pykuwahara import kuwahara
 
 def rescaleFrame(frame, scale=0.75):
     width = int(frame.shape[1] * scale)
@@ -11,58 +12,34 @@ def rescaleFrame(frame, scale=0.75):
     return cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA)
 
 # reading image
-img = cv2.imread('Images/BerriesOriginal.png')
+img = cv2.imread('../Images/cranberry_images/A5S19.jpg')
+#img = cv2.imread('Images/Berries1-D.JPG')
 img = rescaleFrame(img, scale=0.5)
-img = cv2.GaussianBlur(img, (10,10), cv2.BORDER_DEFAULT)
 
-# converting image into grayscale image
-im_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+img = kuwahara(img, method='gaussian', radius=50)
 
-# (thresh, im_bw) = cv2.threshold(im_gray, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-# cv2.imshow('Cranberries', im_bw)
+edges = cv2.Canny(img,100,200)
 
-thresh = 120
-im_bw = cv2.threshold(im_gray, thresh, 255, cv2.THRESH_BINARY)[1]
-cv2.imshow('Cranberries', im_bw)
+contours, hierarchy = cv2.findContours(edges, cv2.RETR_LIST, cv2.CHAIN_APPROX_NONE)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-# setting threshold of gray image
-thresh_val = 95
-_, threshold = cv2.threshold(im_gray, thresh_val, 255, cv2.THRESH_BINARY)
-
-# using a findContours() function
-contours, _ = cv2.findContours(
-    threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-
-# figure out which are cranberries and which are bordering circles
-cranberries = list()
-numberOfBorderCircles = 0
-totalCircleArea = 0
 i = 0
 for contour in contours:
+    hull = cv2.convexHull(contour)
+    area = cv2.contourArea(hull)
+    print(area)
+    if area > 2200:
+        cv2.drawContours(img, [hull], 0, (0, 255, 0), 2)
     # here we are ignoring first contour because
     # findcontour function detects whole image as shape
     if i == 0:
         i = 1
         continue
 
-    area = cv2.contourArea(contour)
-    # criteria for determining if is border circle or if is cranberry
-    if area >= 2100:
-        numberOfBorderCircles = numberOfBorderCircles + 1
-        totalCircleArea = totalCircleArea + area
-    else:
-        cranberries.append(i)
-    i = i + 1
-
-averageBorderCircleArea = totalCircleArea/numberOfBorderCircles
-
 # list for storing names of shapes
 i = 0
 for contour in contours:
-    area = cv2.contourArea(contour)
+    hull = cv2.convexHull(contour)
+    area = cv2.contourArea(hull)
 
     # here we are ignoring first contour because
     # findcontour function detects whole image as shape
@@ -75,17 +52,12 @@ for contour in contours:
     #     contour, 0.01 * cv2.arcLength(contour, True), True)
 
     # using drawContours() function
-    cv2.drawContours(img, [contour], 0, (0, 0, 255), 1)
 
     # finding center point of shape
     M = cv2.moments(contour)
     if M['m00'] != 0.0:
         x = int(M['m10']/M['m00'])
         y = int(M['m01']/M['m00'])
-
-    if i in cranberries:
-        cv2.putText(img, str(round(area/averageBorderCircleArea, 3)), (x, y),
-                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
     i = i + 1
 
 # displaying the image after drawing contours
