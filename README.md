@@ -1,5 +1,7 @@
 # cranberrynet
 
+***When running, the nb files are Mathematica files, and the Output and Image folders need to go one folder back
+
 # Problem
 Frank Lazar is a close friend of Laik’s and works in the Cranberry Genetics and Genomics Laboratory (CGGL) under Prof. Zalapa on UW Madison campus, and is in need of a computer vision tool to quickly perform analysis on their cranberries. We were presented with two tasks. The first was to analyze images of full cranberries from different yields, recording data on individual size, width, height, and any other relevant data. The second was to analyze images of cut open cranberries, recording comparisons between the cranberries overall area to its hollow locule area.
 
