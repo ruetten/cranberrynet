@@ -136,7 +136,7 @@ for contour in contours:
             # make indiviudal images of each cranberry annotated
             cropped_img = img[y-buffer:y+h+buffer, x-buffer:x+w+buffer]
             output_filename = output_dir+filename_split[0]+'_annotated_'+str(i)+'.'+filename_split[1]
-            cv2.imwrite(output_filename,cropped_img)
+            #cv2.imwrite(output_filename,cropped_img)
             #cv2.imshow(output_filename,cropped_img)
 
             # Convert area, width, and length to inches
